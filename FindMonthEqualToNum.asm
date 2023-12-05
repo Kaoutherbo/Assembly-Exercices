@@ -3,7 +3,7 @@ msg1: .asciiz "\nEnter the number of month: "
 menu: .asciiz "\n0-Exit\t1-January\t2-February\t3-March\t4-April\t5-May\t6-June\n7-July\t8-August\t9-September\t10-October\t11-November\t12-December\n"
 resMsg: .asciiz "This is equivalent to: \n"
 months: .asciiz "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-
+errorMsg: .asciiz "Error this is not a valid month\n"
 .text
 main:
     # Enter the number of the month message
@@ -40,12 +40,20 @@ main:
     beq $t0, 10, print10
     beq $t0, 11, print11
     beq $t0, 12, print12
+    bgt $t0, 12, printError
+    blt &t0, 0, printError
     j main
 
 end:
     # End the program
     li $v0, 10
     syscall
+
+printError:
+    li $v0, 4
+    la $a0, errorMsg
+    syscall
+    j end
 
 print1:
     li $v0, 4
